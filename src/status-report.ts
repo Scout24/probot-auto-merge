@@ -1,8 +1,9 @@
 import { PullRequestContext } from './pull-request-handler'
 import { PullRequestInfo } from './models'
-import { ChecksCreateParams } from '@octokit/rest'
+
 import { getMyCheckSuite } from './utils'
 import { CheckConclusionState } from './github-models'
+import { Octokit } from 'probot'
 
 function getOctokitConclusion (value: ReportCheckConclusion | undefined) {
   switch (value) {
@@ -17,7 +18,7 @@ function getOctokitConclusion (value: ReportCheckConclusion | undefined) {
 
 export type ReportCheckConclusion = CheckConclusionState.NEUTRAL | CheckConclusionState.SUCCESS
 
-type CheckOptions = Omit<ChecksCreateParams, 'head_sha'>
+type CheckOptions = Omit<Octokit.ChecksCreateParams, 'head_sha'>
 
 export async function updateStatusReportCheck (
   context: PullRequestContext,

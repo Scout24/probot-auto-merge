@@ -1,6 +1,6 @@
-import { AnyResponse } from '@octokit/rest'
 import { PullRequestInfo } from './models'
 import myappid from './myappid'
+import { Octokit } from 'probot'
 
 export function identity<T> (v: T): T { return v }
 export function keysOf<TKey extends string> (obj: { [key in TKey]: any }): TKey[] {
@@ -44,7 +44,7 @@ export function groupByLastMap<TItem, TKey extends string, TValue> (
  * supplied type.
  * @param response The response from a GitHub API
  */
-export function result<TResult = void> (response: AnyResponse): TResult {
+export function result<TResult = void> (response: Octokit.AnyResponse): TResult {
   if (response.status < 200 || response.status >= 300) {
     throw new Error(`Response status was ${response.status}`)
   }
