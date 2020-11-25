@@ -18,7 +18,6 @@ export async function handlePullRequest (
   context: PullRequestContext,
   pullRequestReference: PullRequestReference
 ) {
-  const { log } = context
   context.log.debug('Querying', pullRequestReference)
   const pullRequestInfo = await queryPullRequest(
     context.github,
@@ -45,7 +44,7 @@ export async function handlePullRequest (
     }
   })
 
-  log(`result:\n${JSON.stringify(pullRequestStatus, null, 2)}`)
+  context.log.info(`result of ${pullRequestInfo.headRef?.repository.name}:${pullRequestInfo.number} ${JSON.stringify(pullRequestStatus, null, 0).replace(/\n/g, '')}`)
   await handlePullRequestStatus(
     context,
     pullRequestInfo,
@@ -378,6 +377,7 @@ async function mergePullRequest (
   const extraParams: ExtraMergeParams = {}
   const pullRequestReference = getPullRequestReference(pullRequestInfo)
   const commitMessage = getCommitMessage(pullRequestInfo, config)
+  context.log.info(`Merging Pull Request ${pullRequestInfo.headRef?.repository.name}#${pullRequestInfo.number}`)
 
   if (commitMessage !== null) {
     const commitMessageParams = splitCommitMessage(commitMessage)
